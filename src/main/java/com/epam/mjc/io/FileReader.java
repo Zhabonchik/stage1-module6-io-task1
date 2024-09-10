@@ -4,28 +4,29 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.FileInputStream;
+import java.util.logging.Logger;
 
 
 public class FileReader {
 
     public Profile getDataFromFile(File file) {
+        Logger logger = Logger.getLogger(getClass().getName());
         Profile profile = new Profile();
         StringBuilder data = new StringBuilder();
         try(FileInputStream fileInputStream = new FileInputStream(file)){
             int c;
             while ((c = fileInputStream.read()) !=- 1){
-                data.append((char) c);
+                data.append((char)c);
             }
-            System.out.println(data);
-            String[] values = data.toString().split("\\s|\\n");
+            String[] values = data.toString().split("\\s+");
             profile.setName(values[1]);
             profile.setAge(Integer.parseInt(values[3]));
             profile.setEmail(values[5]);
             profile.setPhone(Long.parseLong(values[7]));
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            logger.info("File not found: " + file.getAbsolutePath());
         } catch (IOException e){
-            System.out.println("Error reading file: " + e.getMessage());
+            logger.info("Error reading file" + file.getAbsolutePath());
         }
         return profile;
     }
